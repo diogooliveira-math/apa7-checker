@@ -1,0 +1,145 @@
+{
+  "_comment": "Test schema for apa7_checker data-driven tests. Add test cases here.",
+  "year_pattern_tests": [
+    {"entry": "Author, A. (2020). Title.", "valid": true},
+    {"entry": "Author, A. (2020a). Title.", "valid": true},
+    {"entry": "Author, A. (n.d.). Title.", "valid": true},
+    {"entry": "Author, A. (2021, January). Post.", "valid": true},
+    {"entry": "Author, A. (2021, março 15). Post.", "valid": true},
+    {"entry": "Author, A. Title without year.", "valid": false},
+    {"entry": "Wing, J. M. (2008b). Computational thinking.", "valid": true},
+    {"entry": "", "valid": false},
+    {"entry": "Silva, T. & Ramos, P. (2019). Study. Journal.", "valid": true},
+    {"entry": "No year here at all, just text.", "valid": false},
+    {"entry": "Author, B. (in press). Future work.", "valid": false},
+    {"entry": "Author, C. (2023, December 1). Blog post.", "valid": true}
+  ],
+  "classify_tests": [
+    {
+      "entry": "Wing, J. M. (2008). Computational thinking. Communications of the ACM, 49(3), 33–35.",
+      "type": "journal_article"
+    },
+    {
+      "entry": "Pressman, R. S. (2014). Engenharia de software (8.a ed.). McGraw-Hill.",
+      "type": "book"
+    },
+    {
+      "entry": "Lévy, P. (2001). Virtual. In D. Santos (Ed.), Technology (pp. 45–67). Cosmos.",
+      "type": "book_chapter"
+    },
+    {
+      "entry": "Ferreira, M. (2019). Title [Dissertação de mestrado, Universidade].",
+      "type": "thesis"
+    },
+    {
+      "entry": "WHO. (2021). COVID-19. https://www.who.int/covid",
+      "type": "website"
+    },
+    {
+      "entry": "Smith, J. (2020). An algorithm for sorting. Proceedings of the ACM Conference on Theory, 10–18.",
+      "type": "conference_proceedings"
+    },
+    {
+      "entry": "OECD. (2022). Education at a glance: Annual report. OECD Publishing. https://doi.org/10.1787/example",
+      "type": "report"
+    },
+    {
+      "entry": "Costa, A. (2018). Machine learning [Tese de doutoramento, Universidade de Lisboa].",
+      "type": "thesis"
+    },
+    {
+      "entry": "Knuth, D. E. (1998). The art of computer programming (3rd ed.). Addison-Wesley.",
+      "type": "book"
+    },
+    {
+      "entry": "Johnson, R. (2015). Neural networks. IEEE Transactions on Neural Networks, 26(4), 700–710.",
+      "type": "journal_article"
+    }
+  ],
+  "validate_tests": [
+    {
+      "entry": "Wing, J. M. (2008a). Computational thinking and thinking about computing. Philosophical Transactions of the Royal Society A, 366(1881), 3717–3725. https://doi.org/10.1098/rsta.2008.0118",
+      "expected_issues_count": 0
+    },
+    {
+      "entry": "John Smith (2020). Bad format. Journal, 1(1), 1–5.",
+      "expected_issues_min": 1
+    },
+    {
+      "entry": "Costa, A. B. (2017). Um estudo qualitativo. Revista Portuguesa, 3(1), 12–25. http://doi.org/10.1234/rp.2017.001",
+      "expected_issues_min": 1,
+      "_note": "DOI uses http:// instead of https://doi.org/"
+    },
+    {
+      "entry": "Knuth, D. E. (1998). The art of computer programming. Reading, MA: Addison-Wesley.",
+      "expected_issues_min": 1,
+      "_note": "Publisher location (City, ST:) is pre-APA7 format"
+    },
+    {
+      "entry": "Ferreira, M. A. (2019). Aprendizagem automática [Dissertação de mestrado, Universidade do Minho].",
+      "expected_issues_count": 0
+    },
+    {
+      "entry": "World Health Organization. (2021). COVID-19 pandemic. https://www.who.int/emergencies/diseases/novel-coronavirus-2019",
+      "expected_issues_count": 0,
+      "_note": "Institutional author — no comma required; has URL"
+    },
+    {
+      "entry": "Silva, J.; Ramos, P. (2020). Bad separator. Journal, 5(2), 1–10.",
+      "expected_issues_min": 1,
+      "_note": "Semicolons instead of commas in author list"
+    }
+  ],
+  "alphabetical_order_tests": [
+    {
+      "entries": [
+        "Alves, M. (2019). First.",
+        "Brites, K. (2020). Second.",
+        "Costa, P. (2018). Third."
+      ],
+      "expected_violations": 0
+    },
+    {
+      "entries": [
+        "Costa, P. (2018). Third.",
+        "Alves, M. (2019). First.",
+        "Brites, K. (2020). Second."
+      ],
+      "expected_violations_min": 1
+    },
+    {
+      "entries": [
+        "Ávila, R. (2021). Accented first.",
+        "Azevedo, J. (2015). Plain a."
+      ],
+      "expected_violations": 0,
+      "_note": "Accent stripping: Ávila < Azevedo"
+    }
+  ],
+  "cross_check_tests": [
+    {
+      "body": "As noted by Wing (2008), computational thinking is important.",
+      "refs": [
+        "Wing, J. M. (2008). Computational thinking. Communications of the ACM, 49(3), 33–35."
+      ],
+      "expected_missing_in_refs": [],
+      "expected_missing_in_body": []
+    },
+    {
+      "body": "Silva (2020) proposed a new method.",
+      "refs": [
+        "Costa, A. (2019). Unrelated work. Journal, 1(1), 1–5."
+      ],
+      "expected_missing_in_refs": ["Silva (2020)"],
+      "expected_missing_in_body": ["Costa (2019)"]
+    },
+    {
+      "body": "Wing (2008) and also Wing (2008a) extended the ideas.",
+      "refs": [
+        "Wing, J. M. (2008a). Computational thinking. Communications of the ACM, 49(3), 33–35."
+      ],
+      "expected_missing_in_refs": [],
+      "_note": "Suffix normalisation: 2008 in body matches 2008a in refs"
+    }
+  ]
+}
